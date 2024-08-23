@@ -1,0 +1,74 @@
+openapi: 3.0.0
+
+info:
+  title: Etzba api test server
+  description: This server will help to test etzba cli tool with several endpoints and databases and other tools, to measure performance and load testing
+  version: 1.0.0
+
+servers:
+  - url: http://api.etzba.com/v1
+    description: Optional server description, e.g. Main (production) server
+  - url: http://development-api.etzba.com
+    description: Optional server description, e.g. Internal development server for testing
+
+paths:
+  /locations:
+    get:
+      summary: Returns a list of results.
+      description: Optional extended description in CommonMark or HTML.
+      etzba: true
+      responses:
+        '200':    # status code
+          description: A JSON array of results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+  /locations/{locationId}:
+    get:
+      summary: Returns a result by ID.
+      parameters:
+        - name: locationId
+          in: path
+          required: true
+          description: Parameter description in CommonMark or HTML.
+      responses:
+        '200':
+          description: Get a location by ID.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    format: int64
+                    example: 4
+                  created:
+                    type: string
+                    format: date # or date-time
+                    example: "2200-01-01T13:09:35.835Z"
+                    pattern: "YYYY-MM-DD"
+                  modified:
+                    type: string
+                    format: date # or date-time
+                    example: "2200-01-01T13:09:35.835Z"
+                    pattern: "YYYY-MM-DD"
+                  name:
+                    type: string
+                    example: "kenman"
+                    minLength: 3
+                    maxLength: 5
+                  address:
+                    type: string
+                    example: "Ilivein street 32, Dillton 14532"
+                    minLength: 12
+                    maxLength: 48
+                  longtitude: 
+                    type: number
+                    format: float
+                    example: 89.0653450122
+                  latitudes: 
+                    type: number
+                    format: float
+                    example: 12.6682134654
