@@ -16,4 +16,4 @@ COPY --from=be_builder /build/pggo /pggo
 
 WORKDIR /
 
-ENTRYPOINT ["pggo"]
+CMD ["./pggo"]
