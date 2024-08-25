@@ -1,0 +1,46 @@
+version: '3'
+
+services:
+  pggo:
+    image: etzba/pggo:latest
+    environment:
+      - DATABASE_USER=etzba
+      - DATABASE_PASSWORD=Pass1234
+      - DATABASE_DB=etzba
+      - DATABASE_PORT=5432
+      - DATABASE_HOST=pg
+      - DATABASE_SSL=disable
+      - RELEASE_STAGE=testing
+    ports:
+      - "8080:8080"
+    depends_on:
+      - pg
+    # work with limits: https://stackoverflow.com/questions/52308815/resource-limits-specified-in-docker-compose-yml-not-taken-into-account-by-docker
+    deploy:
+      resources:
+        limits:
+          cpus: '0.2'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
+
+  pg:
+    image: 'postgres:14'
+    environment:
+      - POSTGRES_USER=etzba
+      - POSTGRES_PASSWORD=Pass1234
+      - POSTGRES_DB=etzba
+      - TZ='GMT+2'
+      - PGTZ='GMT+2'
+    ports:
+      - "5432:5432"
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '0.4'
+          memory: 512M
+        reservations:
+          cpus: '0.'
+          memory: 256M
