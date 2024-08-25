@@ -1,0 +1,41 @@
+
+api: 
+  name: pggo
+  image:
+    repository: etzba/pggo
+    pullPolicy: IfNotPresent
+    tag: "latest"
+  url: pggo-svc
+  containerPort: 8080
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+pg: 
+  name: etzba-pg
+  image:
+    repository: postgres
+    pullPolicy: IfNotPresent
+    tag: "14"
+  containerPort: 5432
+  resources:
+    limits:
+      cpu: 200m
+      memory: 512Mi
+    requests:
+      cpu: 200m
+      memory: 512Mi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  credentials:
+    username: "etzba"
+    password: "etzba123"
+    database: "etzba"
