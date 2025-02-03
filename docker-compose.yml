@@ -31,6 +31,8 @@ services:
       - POSTGRES_USER=etzba
       - POSTGRES_PASSWORD=Pass1234
       - POSTGRES_DB=etzba
+      - TZ='GMT+2'
+      - PGTZ='GMT+2'
     ports:
       - "5432:5432"
     restart: always
