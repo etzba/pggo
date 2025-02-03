@@ -31,7 +31,7 @@ func GetDatabaseContext() (*Context, error) {
 	}, nil
 }
 
-func AquireConn(c *Context) {
+func (c *Context) aquireConn() {
 	conn, err := c.ConnectionPool.Acquire(context.Background())
 	if err != nil {
 		c.Logger.Error("could not aquire connection to database", err)
