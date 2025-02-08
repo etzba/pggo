@@ -6,6 +6,7 @@ import (
 	_ "github.com/lib/pq"
 )
 
+// InitDB perform initial db migrations
 func (c *Context) InitDB() error {
 	db, err := sql.Open("postgres", getConnectionString())
 	if err != nil {
