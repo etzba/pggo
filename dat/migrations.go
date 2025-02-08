@@ -24,7 +24,7 @@ func (c *Context) InitDB() error {
 		c.Logger.Error("could not run db migrations", err)
 		return err
 	}
-	c.Logger.Info("db migration completed")
+
 	return nil
 }
 
