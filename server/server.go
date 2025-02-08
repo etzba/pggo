@@ -46,6 +46,12 @@ func (s *Server) Run() error {
 
 	s.Database = datCtx
 	s.Logger.Info(fmt.Sprintf("Connected to database %s:%d", env.PostgresHost, env.PostgresPort))
+	if err := s.Database.InitDB(); err != nil {
+		s.Logger.Error("failed to run db migrations", err)
+		return err
+	}
+
+	s.Logger.Info("Database migration completed")
 	s.Logger.Info("Start server in port 8080")
 	if err := s.HTTPServer.ListenAndServe(); err != nil {
 		s.Logger.Error("cannot run http server - listen and serve", err)

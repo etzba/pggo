@@ -13,6 +13,7 @@ type Context struct {
 	ctx            context.Context
 	Logger         *logger.Log
 	ConnectionPool *pgxpool.Pool
+	RowScanner     RowScanner
 }
 
 func GetDatabaseContext() (*Context, error) {
@@ -31,14 +32,14 @@ func GetDatabaseContext() (*Context, error) {
 	}, nil
 }
 
-func (c *Context) aquireConn() {
-	conn, err := c.ConnectionPool.Acquire(context.Background())
-	if err != nil {
-		c.Logger.Error("could not aquire connection to database", err)
-	}
-	defer conn.Release()
+func (c *Context) Ping() error {
+	return c.ConnectionPool.Ping(c.ctx)
+}
+
+func (c *Context) Close() {
+	c.ConnectionPool.Close()
 }
 
 func getConnectionString() string {
-	return fmt.Sprintf("postgres://%s:%s@%s:%d/%s", env.PostgresUser, env.PostgresPass, env.PostgresHost, env.PostgresPort, env.PostgresDB)
+	return fmt.Sprintf("postgres://%s:%s@%s:%d/%s?sslmode=disable", env.PostgresUser, env.PostgresPass, env.PostgresHost, env.PostgresPort, env.PostgresDB)
 }
