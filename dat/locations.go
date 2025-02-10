@@ -8,6 +8,7 @@ import (
 	"github.com/jackc/pgx/v4"
 )
 
+// Location
 type Location struct {
 	Id         int
 	Created    time.Time
@@ -17,6 +18,7 @@ type Location struct {
 	Latitude   float64
 }
 
+// Locations
 type Locations interface {
 	InsertLocationIntoDatabase(loc Location) error
 	GetLocationDetailsByID(locationId int) (*Location, error)
@@ -25,16 +27,7 @@ type Locations interface {
 	DeleteLocationFromDatabase(int) error
 }
 
-func (l *Location) ScanRow(r Row) error {
-	return r.Scan(
-		&l.Id,
-		&l.Name,
-		&l.Address,
-		&l.Longtitude,
-		&l.Latitude,
-	)
-}
-
+// InsertLocationIntoDatabase
 func (c *Context) InsertLocationIntoDatabase(loc Location) error {
 	query := "INSERT INTO locations (name, address, longtitude, latitude) VALUES ($1, $2, $3, $4)"
 
