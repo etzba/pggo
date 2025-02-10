@@ -63,5 +63,6 @@ func (s *Server) getRouter() *mux.Router {
 	router := mux.NewRouter()
 	router.HandleFunc("/locations", s.getLocations()).Methods("GET")
 	router.HandleFunc("/locations/{id}", s.getLocationById()).Methods("GET")
+	router.HandleFunc("/location", s.addLocation()).Methods("POST")
 	return router
 }
