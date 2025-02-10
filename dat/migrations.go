@@ -49,4 +49,23 @@ CREATE TABLE migrations (
 );
 
 END $$;
+
+--
+-- Name: locations table; Type: TABLE; Description: locations table
+--
+DO $$ BEGIN
+IF EXISTS(SELECT 1 FROM migrations WHERE name = 'create-locations-table') THEN RETURN;
+END IF;
+
+CREATE TABLE locations (
+	id SERIAL PRIMARY KEY NOT NULL,
+    created timestamptz NOT NULL DEFAULT NOW(),
+	name TEXT NOT NULL,
+    address TEXT NOT NULL,
+	longtitude DOUBLE PRECISION NOT NULL,
+    latitude DOUBLE PRECISION NOT NULL
+);
+
+INSERT INTO migrations (name) VALUES ('create-locations-table');
+END $$;
 `
