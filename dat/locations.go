@@ -3,6 +3,7 @@ package dat
 import (
 	"context"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/jackc/pgx/v4"
@@ -113,10 +114,67 @@ func (c *Context) GetAllLocationDetails() ([]Location, error) {
 	return locations, nil
 }
 
-func UpdateLocationDetails(int, Location) error {
+func (c *Context) UpdateLocationDetails(id int, loc Location) error {
+	locMap := make(map[string]interface{})
+	if loc.Name != "" {
+		locMap["name"] = loc.Name
+	}
+	if loc.Address != "" {
+		locMap["address"] = loc.Address
+	}
+	if loc.Longtitude != 0 {
+		locMap["longtitude"] = loc.Longtitude
+	}
+	if loc.Latitude != 0 {
+		locMap["latitude"] = loc.Latitude
+	}
+
+	query := "UPDATE locations SET"
+	count := 1
+	for k, _ := range locMap {
+		query += fmt.Sprintf(" %s = $%d,", k, count)
+		count++
+	}
+	query = strings.TrimSuffix(query, ",")
+	query += fmt.Sprintf(" WHERE id = $%d", count)
+	tx, err := c.ConnectionPool.BeginTx(context.TODO(), pgx.TxOptions{})
+	if err != nil {
+		c.Logger.Error("Failed to begin transaction", err)
+		return err
+	}
+
+	defer func() {
+		if err != nil {
+			tx.Rollback(context.TODO())
+		} else {
+			tx.Commit(context.TODO())
+		}
+	}()
+
+	rows, err := tx.Exec(context.Background(), query, loc.Name, loc.Address, loc.Longtitude, loc.Latitude, id)
+	if err != nil {
+		c.Logger.Error("Failed to execute transaction", err)
+		return err
+	}
+
+	c.Logger.Info(fmt.Sprintf("affected rows %d", rows.RowsAffected()))
 	return nil
 }
 
-func DeleteLocationFromDatabase(int) error {
-	return nil
+func (c *Context) DeleteLocationFromDatabase(locationId int) error {
+	tx, err := c.ConnectionPool.BeginTx(context.TODO(), pgx.TxOptions{})
+	if err != nil {
+		return err
+	}
+
+	defer func() {
+		if err != nil {
+			tx.Rollback(context.TODO())
+		} else {
+			tx.Commit(context.TODO())
+		}
+	}()
+
+	_, err = tx.Query(context.Background(), "DELETE FROM locations WHERE id = $1", locationId)
+	return err
 }

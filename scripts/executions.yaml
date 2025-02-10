@@ -7,10 +7,19 @@ api:
   payload: '{ "name": "Etz", "address": "Davrewasdf",  "longtitude": 34.43212123, "latitude": 12.321312234 }'
 - url: {{ $baseUrl }}/location
   method: POST
-  payload: '{ "name": "sdfgfdsg, "address": "sadf asdf",  "longtitude": 54.4334523123, "latitude": 54.321312234 }'
+  payload: '{ "name": "sdfgfdsg", "address": "sadf asdf",  "longtitude": 54.4334523123, "latitude": 54.321312234 }'
 {{ range $slice }}
 - url: {{ $baseUrl }}/locations/{{ . }}
   method: GET
 {{ end }}
 - url: {{ $baseUrl }}/locations/
   method: GET
+{{ range $slice }}
+- url: {{ $baseUrl }}/locations/{{ . }}
+  method: DELETE
+{{ end }}
+{{ range $slice }}
+- url: {{ $baseUrl }}/locations/{{ . }}
+  method: PUT
+  payload: '{ "name": "pdate", "address": "pdate pdate",  "longtitude": 66.4366123, "latitude": 77.7773234 }'
+{{ end }}
