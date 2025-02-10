@@ -2,14 +2,14 @@ version: '3'
 
 services:
   pggo:
-    image: etzba/pggo:latest
+    image: etzba/pggo:0.0.4
     environment:
-      - DATABASE_USER=etzba
-      - DATABASE_PASSWORD=Pass1234
-      - DATABASE_DB=etzba
-      - DATABASE_PORT=5432
-      - DATABASE_HOST=pg
-      - DATABASE_SSL=disable
+      - ETZBA_POSTGRES_USER=etzba
+      - ETZBA_POSTGRES_PASSWORD=Pass1234
+      - ETZBA_POSTGRES_DB=etzba
+      - ETZBA_POSTGRES_PORT=5432
+      - ETZBA_POSTGRES_HOST=pg
+      - ETZBA_POSTGRES_SSL=disable
       - RELEASE_STAGE=testing
     ports:
       - "8080:8080"
