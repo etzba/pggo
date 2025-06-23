@@ -3,9 +3,12 @@
 
 api:
 {{ range $slice }}
+- url: {{ $baseUrl }}/location
+  method: POST
+  payload: '{ "name": {{ getRandStringInLength 8 }}, "address": {{ getRandStringInLength 20 }},  {{ getFloatInRange 50 60 }}, "latitude": {{ getFloatInRange -40 -20 }} }'
 - url: {{ $baseUrl }}/locations
   method: POST
-  payload: '{ "name": {{ getRandStringInLength 5 }}, "address": {{ getRandStringInLength 23 }},  {{ getFloatInRange 70 90 }}, "latitude": {{ getFloatInRange -80 -60 }}}'
+  payload: '{ "name": {{ getRandStringInLength 10 }}, "address": {{ getRandStringInLength 16 }},  {{ getFloatInRange 20 40 }}, "latitude": {{ getFloatInRange -20 10 }}}'
 - url: {{ $baseUrl }}/locations
   method: POST
   data: 
