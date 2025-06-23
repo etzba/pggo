@@ -16,19 +16,13 @@ api:
     address: {{ getRandStringInLength 23 }}
     longtitude: {{ getFloatInRange 70 90 }}
     latitude: {{ getFloatInRange -80 -60 }}
-{{ end }}
-{{ range $slice }}
 - url: {{ $baseUrl }}/locations/{{ . }}
   method: GET
-{{ end }}
 - url: {{ $baseUrl }}/locations/
   method: GET
-{{ range $slice }}
 - url: {{ $baseUrl }}/locations/{{ . }}
   method: DELETE
-{{ end }}
-{{ range $slice }}
 - url: {{ $baseUrl }}/locations/{{ . }}
   method: PUT
-  payload: '{ "name": "Etz", "address": "Etzba str. 123 12345",  "longtitude": {{ getFloatInRange 70 90 }}, "latitude": {{ getFloatInRange -80 -60 }} }'
+  payload: '{ "name": "Etz {{ getRandStringInLength 4 }}", "address": "Etzba {{ getRandStringInLength 8 }} str. 123 12345",  "longtitude": {{ getFloatInRange 70 90 }}, "latitude": {{ getFloatInRange -80 -60 }} }'
 {{ end }}
