@@ -16,12 +16,11 @@ func (s *Server) getLocations() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		s.Logger.Info("Server go request" + " method: " + r.Method + " uri: " + r.RequestURI)
 		now := time.Now()
-		s.shipper.Collect(now, r)
+		defer s.shipper.Collect(now, r)
 		locations, err := s.Database.GetAllLocationDetails()
 		if err != nil {
 			s.Logger.Error("Failed to get all locations", err)
 			s.Respoder.SendError(w, err)
-			s.shipper.SetCurrentUsersEnd(r)
 			return
 		}
 
@@ -29,7 +28,6 @@ func (s *Server) getLocations() func(w http.ResponseWriter, r *http.Request) {
 			fmt.Fprintf(w, "Location: %+v\n", l)
 		}
 		s.Respoder.SendOK(w, locations)
-		s.shipper.SetCurrentUsersEnd(r)
 	}
 }
 
@@ -37,13 +35,12 @@ func (s *Server) getLocationById() func(w http.ResponseWriter, r *http.Request) 
 	return func(w http.ResponseWriter, r *http.Request) {
 		s.Logger.Info("Server go request" + " method: " + r.Method + " uri: " + r.RequestURI)
 		now := time.Now()
-		s.shipper.Collect(now, r)
+		defer s.shipper.Collect(now, r)
 		idStr, _ := strings.CutPrefix(r.URL.Path, "/locations/")
 		id, err := strconv.Atoi(idStr)
 		if err != nil {
 			s.Logger.Error("Failed to convert string to integer", err)
 			s.Respoder.SendError(w, err)
-			s.shipper.SetCurrentUsersEnd(r)
 			return
 		}
 
@@ -51,13 +48,11 @@ func (s *Server) getLocationById() func(w http.ResponseWriter, r *http.Request) 
 		if err != nil {
 			s.Logger.Error("Failed to get location by id", err)
 			s.Respoder.SendError(w, err)
-			s.shipper.SetCurrentUsersEnd(r)
 			return
 		}
 
 		fmt.Fprintf(w, "Location: %+v\n", location)
 		s.Respoder.SendOK(w, location)
-		s.shipper.SetCurrentUsersEnd(r)
 	}
 }
 
@@ -65,12 +60,11 @@ func (s *Server) addLocation() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		s.Logger.Info("Server go request" + " method: " + r.Method + " uri: " + r.RequestURI)
 		now := time.Now()
-		s.shipper.Collect(now, r)
+		defer s.shipper.Collect(now, r)
 		loc := wire.Location{}
 		if err := json.NewDecoder(r.Body).Decode(&loc); err != nil {
 			s.Logger.Error("Failed to create new decoder", err)
 			http.Error(w, err.Error(), http.StatusBadRequest)
-			s.shipper.SetCurrentUsersEnd(r)
 			return
 		}
 
@@ -84,13 +78,11 @@ func (s *Server) addLocation() func(w http.ResponseWriter, r *http.Request) {
 		if err := s.Database.InsertLocationIntoDatabase(location); err != nil {
 			s.Logger.Error("Failed to insert location", err)
 			s.Respoder.SendError(w, err)
-			s.shipper.SetCurrentUsersEnd(r)
 			return
 		}
 
 		fmt.Fprintf(w, "Location added: %+v\n", location)
 		s.Respoder.SendOK(w, location)
-		s.shipper.SetCurrentUsersEnd(r)
 	}
 }
 
@@ -98,13 +90,12 @@ func (s *Server) updateLocation() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		s.Logger.Info("Server go request" + " method: " + r.Method + " uri: " + r.RequestURI)
 		now := time.Now()
-		s.shipper.Collect(now, r)
+		defer s.shipper.Collect(now, r)
 		idStr, _ := strings.CutPrefix(r.URL.Path, "/locations/")
 		id, err := strconv.Atoi(idStr)
 		if err != nil {
 			s.Logger.Error("Failed to convert string to integer", err)
 			s.Respoder.SendError(w, err)
-			s.shipper.SetCurrentUsersEnd(r)
 			return
 		}
 
@@ -112,7 +103,6 @@ func (s *Server) updateLocation() func(w http.ResponseWriter, r *http.Request) {
 		if err := json.NewDecoder(r.Body).Decode(&loc); err != nil {
 			s.Logger.Error("Failed to create new decoder", err)
 			http.Error(w, err.Error(), http.StatusBadRequest)
-			s.shipper.SetCurrentUsersEnd(r)
 			return
 		}
 
@@ -126,13 +116,11 @@ func (s *Server) updateLocation() func(w http.ResponseWriter, r *http.Request) {
 		if err := s.Database.UpdateLocationDetails(id, location); err != nil {
 			s.Logger.Error("Failed to update location", err)
 			s.Respoder.SendError(w, err)
-			s.shipper.SetCurrentUsersEnd(r)
 			return
 		}
 
 		fmt.Fprintf(w, "Location added: %+v\n", location)
 		s.Respoder.SendOK(w, location)
-		s.shipper.SetCurrentUsersEnd(r)
 	}
 }
 
@@ -140,25 +128,22 @@ func (s *Server) deleteLocationById() func(w http.ResponseWriter, r *http.Reques
 	return func(w http.ResponseWriter, r *http.Request) {
 		s.Logger.Info("Server go request" + " method: " + r.Method + " uri: " + r.RequestURI)
 		now := time.Now()
-		s.shipper.Collect(now, r)
+		defer s.shipper.Collect(now, r)
 		idStr, _ := strings.CutPrefix(r.URL.Path, "/locations/")
 		id, err := strconv.Atoi(idStr)
 		if err != nil {
 			s.Logger.Error("Failed to convert string to integer", err)
 			s.Respoder.SendError(w, err)
-			s.shipper.SetCurrentUsersEnd(r)
 			return
 		}
 
 		if err := s.Database.DeleteLocationFromDatabase(id); err != nil {
 			s.Logger.Error("Failed to delete location by id", err)
 			s.Respoder.SendError(w, err)
-			s.shipper.SetCurrentUsersEnd(r)
 			return
 		}
 
 		fmt.Fprintf(w, "Location id deleted: %+v\n", id)
 		s.Respoder.SendOK(w, id)
-		s.shipper.SetCurrentUsersEnd(r)
 	}
 }

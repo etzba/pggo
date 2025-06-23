@@ -1,13 +1,22 @@
 {{ $baseUrl := printf "%s" "http://localhost:8080" }}
-{{ $slice := makeIntSlice 1 2 3 4 }}
+{{ $slice := makeIntSliceBySum 100 }}
 
 api:
+{{ range $slice }}
 - url: {{ $baseUrl }}/location
   method: POST
-  payload: '{ "name": "Etz", "address": "Davrewasdf",  "longtitude": 34.43212123, "latitude": 12.321312234 }'
+  payload: '{ "name": {{ getRandStringInLength 5 }}, "address": {{ getRandStringInLength 23 }},  {{ getFloatInRange 70 90 }}, "latitude": {{ getFloatInRange -80 -60 }} }'
 - url: {{ $baseUrl }}/location
   method: POST
-  payload: '{ "name": "sdfgfdsg", "address": "sadf asdf",  "longtitude": 54.4334523123, "latitude": 54.321312234 }'
+  payload: '{ "name": {{ getRandStringInLength 5 }}, "address": {{ getRandStringInLength 23 }},  {{ getFloatInRange 70 90 }}, "latitude": {{ getFloatInRange -80 -60 }}}'
+- url: {{ $baseUrl }}/location
+  method: POST
+  data: 
+    name: {{ getRandStringInLength 5 }}
+    address: {{ getRandStringInLength 23 }}
+    longtitude: {{ getFloatInRange 70 90 }}
+    latitude: {{ getFloatInRange -80 -60 }}
+{{ end }}
 {{ range $slice }}
 - url: {{ $baseUrl }}/locations/{{ . }}
   method: GET
@@ -21,5 +30,5 @@ api:
 {{ range $slice }}
 - url: {{ $baseUrl }}/locations/{{ . }}
   method: PUT
-  payload: '{ "name": "pdate", "address": "pdate pdate",  "longtitude": 66.4366123, "latitude": 77.7773234 }'
+  payload: '{ "name": "Etz", "address": "Etzba str. 123 12345",  "longtitude": {{ getFloatInRange 70 90 }}, "latitude": {{ getFloatInRange -80 -60 }} }'
 {{ end }}
