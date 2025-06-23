@@ -5,30 +5,24 @@ api:
 {{ range $slice }}
 - url: {{ $baseUrl }}/location
   method: POST
-  payload: '{ "name": {{ getRandStringInLength 5 }}, "address": {{ getRandStringInLength 23 }},  {{ getFloatInRange 70 90 }}, "latitude": {{ getFloatInRange -80 -60 }} }'
-- url: {{ $baseUrl }}/location
+  payload: '{ "name": {{ getRandStringInLength 8 }}, "address": {{ getRandStringInLength 20 }},  {{ getFloatInRange 50 60 }}, "latitude": {{ getFloatInRange -40 -20 }} }'
+- url: {{ $baseUrl }}/locations
   method: POST
-  payload: '{ "name": {{ getRandStringInLength 5 }}, "address": {{ getRandStringInLength 23 }},  {{ getFloatInRange 70 90 }}, "latitude": {{ getFloatInRange -80 -60 }}}'
-- url: {{ $baseUrl }}/location
+  payload: '{ "name": {{ getRandStringInLength 10 }}, "address": {{ getRandStringInLength 16 }},  {{ getFloatInRange 20 40 }}, "latitude": {{ getFloatInRange -20 10 }}}'
+- url: {{ $baseUrl }}/locations
   method: POST
   data: 
     name: {{ getRandStringInLength 5 }}
     address: {{ getRandStringInLength 23 }}
     longtitude: {{ getFloatInRange 70 90 }}
     latitude: {{ getFloatInRange -80 -60 }}
-{{ end }}
-{{ range $slice }}
 - url: {{ $baseUrl }}/locations/{{ . }}
   method: GET
-{{ end }}
 - url: {{ $baseUrl }}/locations/
   method: GET
-{{ range $slice }}
 - url: {{ $baseUrl }}/locations/{{ . }}
   method: DELETE
-{{ end }}
-{{ range $slice }}
 - url: {{ $baseUrl }}/locations/{{ . }}
   method: PUT
-  payload: '{ "name": "Etz", "address": "Etzba str. 123 12345",  "longtitude": {{ getFloatInRange 70 90 }}, "latitude": {{ getFloatInRange -80 -60 }} }'
+  payload: '{ "name": "Etz {{ getRandStringInLength 4 }}", "address": "Etzba {{ getRandStringInLength 8 }} str. 123 12345",  "longtitude": {{ getFloatInRange 70 90 }}, "latitude": {{ getFloatInRange -80 -60 }} }'
 {{ end }}

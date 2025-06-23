@@ -6,4 +6,4 @@
 #curl -X POST http://localhost:8080/location -d '{ "name": "Etz", "address": "Davwer",  "longtitude": 76.655645321, "latitude": 14.11312234 }'
 #curl http://localhost:8080/locations
 #curl http://localhost:8080/locations/2
-etz api --exec=scripts/executions.yaml -w 10 -r 20 -d 3s
+etz api --exec=scripts/executions.yaml -w 100 -r 500 -d 3s
