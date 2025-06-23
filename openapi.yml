@@ -19,7 +19,7 @@ paths:
       etzba: true
       responses:
         '200':    # status code
-          description: A JSON array of results
+          description: A JSON array of locations
           content:
             application/json:
               schema:
@@ -38,7 +38,7 @@ paths:
           description: Created
   /locations/{locationId}:
     get:
-      summary: Returns a result by ID.
+      summary: Returns a location by ID.
       parameters:
         - name: locationId
           in: path
@@ -84,6 +84,28 @@ paths:
                     type: number
                     format: float
                     example: 12.6682134654
+    put:
+      summary: Update locations
+      requestBody:
+        description: Optional description in *Markdown*
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Location"
+      responses:
+        "200":
+          description: Created
+    delete:
+      summary: Delete location by ID.
+      parameters:
+        - name: locationId
+          in: path
+          required: true
+          description: Parameter description in CommonMark or HTML.
+      responses:
+        '200':
+          description: Delete location by ID.
   components:
     schemas:
       Location:

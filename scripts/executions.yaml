@@ -2,10 +2,10 @@
 {{ $slice := makeIntSlice 1 2 3 4 }}
 
 api:
-- url: {{ $baseUrl }}/location
+- url: {{ $baseUrl }}/locations
   method: POST
   payload: '{ "name": "Etz", "address": "Davrewasdf",  "longtitude": 34.43212123, "latitude": 12.321312234 }'
-- url: {{ $baseUrl }}/location
+- url: {{ $baseUrl }}/locations
   method: POST
   payload: '{ "name": "sdfgfdsg", "address": "sadf asdf",  "longtitude": 54.4334523123, "latitude": 54.321312234 }'
 {{ range $slice }}
