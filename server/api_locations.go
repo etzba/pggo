@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/etzba/pggo/dat"
 	"github.com/etzba/pggo/wire"
@@ -14,6 +15,8 @@ import (
 func (s *Server) getLocations() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		s.Logger.Info("Server go request" + " method: " + r.Method + " uri: " + r.RequestURI)
+		now := time.Now()
+		defer s.shipper.Collect(now, r)
 		locations, err := s.Database.GetAllLocationDetails()
 		if err != nil {
 			s.Logger.Error("Failed to get all locations", err)
@@ -31,6 +34,8 @@ func (s *Server) getLocations() func(w http.ResponseWriter, r *http.Request) {
 func (s *Server) getLocationById() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		s.Logger.Info("Server go request" + " method: " + r.Method + " uri: " + r.RequestURI)
+		now := time.Now()
+		defer s.shipper.Collect(now, r)
 		idStr, _ := strings.CutPrefix(r.URL.Path, "/locations/")
 		id, err := strconv.Atoi(idStr)
 		if err != nil {
@@ -54,6 +59,8 @@ func (s *Server) getLocationById() func(w http.ResponseWriter, r *http.Request) 
 func (s *Server) addLocation() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		s.Logger.Info("Server go request" + " method: " + r.Method + " uri: " + r.RequestURI)
+		now := time.Now()
+		defer s.shipper.Collect(now, r)
 		loc := wire.Location{}
 		if err := json.NewDecoder(r.Body).Decode(&loc); err != nil {
 			s.Logger.Error("Failed to create new decoder", err)
@@ -82,6 +89,8 @@ func (s *Server) addLocation() func(w http.ResponseWriter, r *http.Request) {
 func (s *Server) updateLocation() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		s.Logger.Info("Server go request" + " method: " + r.Method + " uri: " + r.RequestURI)
+		now := time.Now()
+		defer s.shipper.Collect(now, r)
 		idStr, _ := strings.CutPrefix(r.URL.Path, "/locations/")
 		id, err := strconv.Atoi(idStr)
 		if err != nil {
@@ -118,6 +127,8 @@ func (s *Server) updateLocation() func(w http.ResponseWriter, r *http.Request) {
 func (s *Server) deleteLocationById() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		s.Logger.Info("Server go request" + " method: " + r.Method + " uri: " + r.RequestURI)
+		now := time.Now()
+		defer s.shipper.Collect(now, r)
 		idStr, _ := strings.CutPrefix(r.URL.Path, "/locations/")
 		id, err := strconv.Atoi(idStr)
 		if err != nil {

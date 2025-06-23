@@ -9,6 +9,8 @@ import (
 	"github.com/etzba/pggo/pkg/logger"
 	"github.com/etzba/pggo/wire"
 	"github.com/gorilla/mux"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 type Server struct {
@@ -17,16 +19,20 @@ type Server struct {
 	Mux        *http.ServeMux
 	Respoder   wire.Responder
 	Database   *dat.Context
+	shipper    Shipper
 }
 
-func New(address string) *Server {
+func New(logger *logger.Log, address string) *Server {
 	responder := wire.Respond{
-		Logger: logger.New(),
+		Logger: logger,
 	}
 	server := &Server{
-		Logger:   logger.New(),
+		Logger:   logger,
 		Respoder: responder,
 	}
+	logger.Info("configuring prometheus shipper and register metrics")
+	server.shipper = NewShipper(logger)
+	server.shipper.Register()
 	router := server.getRouter()
 	server.Mux = http.NewServeMux()
 	server.Mux.Handle("/", router)
@@ -61,10 +67,26 @@ func (s *Server) Run() error {
 
 func (s *Server) getRouter() *mux.Router {
 	router := mux.NewRouter()
+	router.NotFoundHandler = notFound
+	router.MethodNotAllowedHandler = methodNotAllowed
 	router.HandleFunc("/locations", s.getLocations()).Methods("GET")
 	router.HandleFunc("/locations/{id}", s.getLocationById()).Methods("GET")
 	router.HandleFunc("/location", s.addLocation()).Methods("POST")
 	router.HandleFunc("/locations/{id}", s.updateLocation()).Methods("PUT")
 	router.HandleFunc("/locations/{id}", s.deleteLocationById()).Methods("DELETE")
+	router.Handle("/metrics", promhttp.HandlerFor(prometheus.DefaultGatherer,
+		promhttp.HandlerOpts{
+			EnableOpenMetrics: true,
+		})).Methods("GET")
 	return router
 }
+
+var notFound = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusNotFound)
+	w.Write([]byte("Not found"))
+})
+
+var methodNotAllowed = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusMethodNotAllowed)
+	w.Write([]byte("Method not allowed"))
+})
