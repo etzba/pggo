@@ -1,0 +1,24 @@
+{{ $baseUrl := printf "%s" "http://localhost:8080" }}
+
+api:
+- url: {{ $baseUrl }}/locations
+  method: GET
+- url: {{ $baseUrl }}/locations
+  method: POST
+  data: 
+    name: {{ getRandStringInLength 5 }}
+    address: {{ getRandStringInLength 23 }}
+    longtitude: {{ getFloatInRange 70 90 }}
+    latitude: {{ getFloatInRange -80 -60 }}
+- url: {{ $baseUrl }}/locations
+  method: POST
+  payload: '{ "name": {{ getRandStringInLength 8 }}, "address": {{ getRandStringInLength 13 }},  "longtitude": {{ getFloatInRange -20 30 }}, "latitude": {{ getFloatInRange 40 70 }} }'
+- url: {{ $baseUrl }}/locations/{{ . }}
+  method: PUT
+  payload: '{ "name": {{ getRandStringInLength 12 }}, "address": {{ getRandStringInLength 18 }},  "longtitude": {{ getFloatInRange -50 -20 }}, "latitude": {{ getFloatInRange 20 40 }} }'
+- url: {{ $baseUrl }}/locations/{{ getIntInRange 1000 10 }}
+  method: DELETE
+- url: {{ $baseUrl }}/locations/{{ getIntInRange 1000 10 }}
+  method: GET
+- url: {{ $baseUrl }}/locations/
+  method: GET

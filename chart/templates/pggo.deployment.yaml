@@ -4,6 +4,8 @@ metadata:
   name: {{ .Values.api.name }}
   labels:
     app: {{ .Values.api.name }}
+  annotations:
+    etzba.com/image-updater: enabled
 spec:
   selector:
     matchLabels:
@@ -20,7 +22,7 @@ spec:
       containers:
         - name: {{ .Values.api.name }}
           image: "{{ .Values.api.image.repository }}:{{ .Values.api.image.tag }}"
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: {{ .Values.api.pullPolicy }}
           ports:
             - containerPort: {{ .Values.api.containerPort }}
               name: http-pggo
@@ -33,26 +35,26 @@ spec:
               cpu: {{ .Values.api.resources.requests.cpu }}
               memory: {{ .Values.api.resources.requests.memory }}
           env:
-          - name: DATABASE_NAME
+          - name: POSTGRES_DB
             valueFrom:
               secretKeyRef:
                 name: {{ .Values.pg.name }}-sec
                 key: postgres_database
-          - name: DATABASE_USER
+          - name: POSTGRES_USER
             valueFrom:
               secretKeyRef:
                 name: {{ .Values.pg.name }}-sec
                 key: postgres_user
-          - name: DATABASE_PASSWORD
+          - name: POSTGRES_PASSWORD
             valueFrom:
               secretKeyRef:
                 name: {{ .Values.pg.name }}-sec
                 key: postgres_password
           - name: DATABASE_SSL
             value: disable
-          - name: DATABASE_PORT
-            value: "5432"
-          - name: DATABASE_HOST
-            value: {{ .Values.pg.name }}-svc
+          - name: POSTGRES_PORT
+            value: "{{ .Values.pg.containerPort }}"
+          - name: POSTGRES_HOST
+            value: {{ .Values.pg.name }}
           - name: RELEASE_STAGE
             value: testing

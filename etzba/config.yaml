@@ -1,0 +1,88 @@
+{{ $baseUrl := printf "%s" "http://localhost:8080" }}
+{{ $resultsPath := printf "%s" "results" }}
+
+executions:
+  easyLoc:  
+    config:
+      workers: 10
+      rps: 40
+      duration: 12s
+      output: {{ $resultsPath }}/easyLoc.json
+    api:
+    - url: {{ $baseUrl }}/locations
+      method: GET
+    - url: {{ $baseUrl }}/locations
+      method: POST
+      data: 
+        name: {{ getRandStringInLength 5 }}
+        address: {{ getRandStringInLength 23 }}
+        longtitude: {{ getFloatInRange 70 90 }}
+        latitude: {{ getFloatInRange -80 -60 }}
+    - url: {{ $baseUrl }}/locations
+      method: POST
+      payload: '{ "name": {{ getRandStringInLength 8 }}, "address": {{ getRandStringInLength 13 }},  "longtitude": {{ getFloatInRange -20 30 }}, "latitude": {{ getFloatInRange 40 70 }} }'
+    - url: {{ $baseUrl }}/locations/{{ . }}
+      method: PUT
+      payload: '{ "name": {{ getRandStringInLength 12 }}, "address": {{ getRandStringInLength 18 }},  "longtitude": {{ getFloatInRange -50 -20 }}, "latitude": {{ getFloatInRange 20 40 }} }'
+    - url: {{ $baseUrl }}/locations/{{ getIntInRange 1000 100 }}
+      method: DELETE
+    - url: {{ $baseUrl }}/locations/{{ getIntInRange 1000 100 }}
+      method: GET
+    - url: {{ $baseUrl }}/locations/
+      method: GET
+  mediumLoc:  
+    config:
+      workers: 50
+      rps: 200
+      duration: 8s
+      output: {{ $resultsPath }}/mediumLoc.json
+    api:
+    - url: {{ $baseUrl }}/locations
+      method: GET
+    - url: {{ $baseUrl }}/locations
+      method: POST
+      data: 
+        name: {{ getRandStringInLength 5 }}
+        address: {{ getRandStringInLength 23 }}
+        longtitude: {{ getFloatInRange 70 90 }}
+        latitude: {{ getFloatInRange -80 -60 }}
+    - url: {{ $baseUrl }}/locations
+      method: POST
+      payload: '{ "name": {{ getRandStringInLength 8 }}, "address": {{ getRandStringInLength 13 }},  "longtitude": {{ getFloatInRange -20 30 }}, "latitude": {{ getFloatInRange 40 70 }} }'
+    - url: {{ $baseUrl }}/locations/{{ . }}
+      method: PUT
+      payload: '{ "name": {{ getRandStringInLength 12 }}, "address": {{ getRandStringInLength 18 }},  "longtitude": {{ getFloatInRange -50 -20 }}, "latitude": {{ getFloatInRange 20 40 }} }'
+    - url: {{ $baseUrl }}/locations/{{ getIntInRange 1000 10 }}
+      method: DELETE
+    - url: {{ $baseUrl }}/locations/{{ getIntInRange 1000 10 }}
+      method: GET
+    - url: {{ $baseUrl }}/locations/
+      method: GET
+  hardLoc:  
+    config:
+      workers: 100
+      rps: 500
+      duration: 3s
+      output: {{ $resultsPath }}/hardLoc.json
+    api:
+    - url: {{ $baseUrl }}/locations
+      method: GET
+    - url: {{ $baseUrl }}/locations
+      method: POST
+      data: 
+        name: {{ getRandStringInLength 5 }}
+        address: {{ getRandStringInLength 23 }}
+        longtitude: {{ getFloatInRange 70 90 }}
+        latitude: {{ getFloatInRange -80 -60 }}
+    - url: {{ $baseUrl }}/locations
+      method: POST
+      payload: '{ "name": {{ getRandStringInLength 8 }}, "address": {{ getRandStringInLength 13 }},  "longtitude": {{ getFloatInRange -20 30 }}, "latitude": {{ getFloatInRange 40 70 }} }'
+    - url: {{ $baseUrl }}/locations/{{ . }}
+      method: PUT
+      payload: '{ "name": {{ getRandStringInLength 12 }}, "address": {{ getRandStringInLength 18 }},  "longtitude": {{ getFloatInRange -50 -20 }}, "latitude": {{ getFloatInRange 20 40 }} }'
+    - url: {{ $baseUrl }}/locations/{{ getIntInRange 10000 10 }}
+      method: DELETE
+    - url: {{ $baseUrl }}/locations/{{ getIntInRange 10000 10 }}
+      method: GET
+    - url: {{ $baseUrl }}/locations/
+      method: GET

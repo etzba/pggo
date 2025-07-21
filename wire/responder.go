@@ -28,11 +28,11 @@ func (r Respond) SendOK(w http.ResponseWriter, obj ...interface{}) {
 		w.Header().Set("X-Frame-Options", "SAMEORIGIN")
 		_, _ = w.Write(body)
 	} else {
-		w.Write([]byte("OK!"))
+		w.Write([]byte("OK!")) //nolint:errcheck
 	}
 }
 
 func (r Respond) SendError(w http.ResponseWriter, err error) {
 	w.WriteHeader(http.StatusInternalServerError)
-	w.Write([]byte(err.Error()))
+	w.Write([]byte(err.Error())) //nolint:errcheck
 }

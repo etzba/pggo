@@ -1,18 +1,35 @@
+NAME ?= pggo
 TAG ?= latest
-REPO ?= etzba/pggo
+REPO ?= etzba/${NAME}
 
-all: test up 
+all: test up exec down
 
 # unit tests
 test:
 	go test -v ./...
 
+# TODO: set test from golang client
+test-e2e:
+	echo e2e
+
 run:
 	go run main.go
 
+lint:
+	golangci-lint run ./...
+
+# local development
 start:
 	sh scripts/start.sh
 
+# test with etzba 
+exec:
+	etz --config=etzba/config.yaml
+	etz api --exec=etzba/locations.yaml -d=3s -w=2
+	etz api --exec=etzba/locations.yaml -d=3s -w=4 -r=12 --output=etzba/results/$$(date +%Y%m%d_%H%M%S)_result.json
+	etz api --exec=etzba/locations.yaml -d=3s -w=6 -r=24 --output=etzba/results/$$(date +%Y%m%d_%H%M%S)_result.json
+
+# docker
 up:
 	docker-compose down
 	sleep 3
@@ -20,8 +37,11 @@ up:
 	sleep 8
 	docker-compose up -d pggo 
 
-# prepare docker for cli tests
-docker-cleanup: cleanup-api cleanup-pg
+down:
+	docker-compose down
+
+# cleanup running docker containers
+cleanup: cleanup-api cleanup-pg
 
 cleanup-api:
 	docker rm $$(docker stop $$(docker ps -a -q --filter ancestor=etzba/pggo:latest --format="{{.ID}}"))
@@ -38,5 +58,12 @@ docker-build:
 docker-push: ## Push docker image with the manager.
 	docker push ${REPO}:${TAG}
 
-helm:
-	helm install pggo chart/ -n pggo --create-namespace
+# install or upgrade helm in kubernetes
+install:
+	helm install ${NAME} chart/ -n ${NAME} --create-namespace
+
+upgrade:
+	helm upgrade --install ${NAME} chart/ -n ${NAME}
+
+remove:
+	kubectl delete ns ${NAME}

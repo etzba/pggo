@@ -3,9 +3,8 @@ api:
   name: pggo
   image:
     repository: etzba/pggo
-    pullPolicy: IfNotPresent
     tag: "latest"
-  url: pggo-svc
+  pullPolicy: Always
   containerPort: 8080
   resources:
     limits:
@@ -19,7 +18,7 @@ api:
   affinity: {}
 
 pg: 
-  name: etzba-pg
+  name: postgres
   image:
     repository: postgres
     pullPolicy: IfNotPresent
@@ -36,6 +35,6 @@ pg:
   tolerations: []
   affinity: {}
   credentials:
-    username: "etzba"
-    password: "etzba123"
-    database: "etzba"
+    username: "pggo"
+    password: "pggo123"
+    database: "pggo"

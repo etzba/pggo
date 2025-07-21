@@ -1,0 +1,70 @@
+# https://golangci-lint.run/usage/configuration/
+version: "2"
+
+run:
+  allow-parallel-runners: true
+linters:
+  enable:
+    - asciicheck
+    - bodyclose
+    - canonicalheader
+    - contextcheck
+    - decorder
+    - durationcheck
+    - err113
+    - errcheck
+    - errchkjson
+    - errname
+    - errorlint
+    - exhaustive
+    - fatcontext
+    - gochecksumtype
+    #- gocognit
+    - goconst
+    #- gocyclo
+    #- godox
+    - goheader
+    - goprintffuncname
+    #- gosec
+    - govet
+    #- ireturn
+    - loggercheck
+    - promlinter
+    - spancheck
+    - sqlclosecheck
+    - staticcheck
+    - testifylint
+    #- testpackage
+    - unparam
+    - unused
+    - wastedassign
+    - whitespace
+  settings:
+    revive:
+      rules:
+        - name: comment-spacings
+        - name: import-shadowing
+  exclusions:
+    generated: lax
+    rules:
+      - linters:
+          - lll
+        path: api/*
+      - linters:
+          - dupl
+          - lll
+        path: internal/*
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
+formatters:
+  enable:
+    - gofmt
+    - goimports
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$

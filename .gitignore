@@ -23,3 +23,12 @@ go.work.sum
 
 # env file
 .env
+
+results.json
+report.xml
+pkg/debug
+dat/read.md
+dat/actions.go
+etzba/results
+etzba/results/
+etzba/results/*
