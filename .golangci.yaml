@@ -4,7 +4,6 @@ version: "2"
 run:
   allow-parallel-runners: true
 linters:
-  disable-all: true
   enable:
     - asciicheck
     - bodyclose
