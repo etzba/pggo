@@ -35,26 +35,26 @@ spec:
               cpu: {{ .Values.api.resources.requests.cpu }}
               memory: {{ .Values.api.resources.requests.memory }}
           env:
-          - name: DATABASE_NAME
+          - name: POSTGRES_DB
             valueFrom:
               secretKeyRef:
                 name: {{ .Values.pg.name }}-sec
                 key: postgres_database
-          - name: DATABASE_USER
+          - name: POSTGRES_USER
             valueFrom:
               secretKeyRef:
                 name: {{ .Values.pg.name }}-sec
                 key: postgres_user
-          - name: DATABASE_PASSWORD
+          - name: POSTGRES_PASSWORD
             valueFrom:
               secretKeyRef:
                 name: {{ .Values.pg.name }}-sec
                 key: postgres_password
           - name: DATABASE_SSL
             value: disable
-          - name: DATABASE_PORT
-            value: "5432"
-          - name: DATABASE_HOST
+          - name: POSTGRES_PORT
+            value: "{{ .Values.pg.containerPort }}"
+          - name: POSTGRES_HOST
             value: {{ .Values.pg.name }}
           - name: RELEASE_STAGE
             value: testing
