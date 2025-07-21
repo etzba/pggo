@@ -4,6 +4,8 @@ metadata:
   name: {{ .Values.api.name }}
   labels:
     app: {{ .Values.api.name }}
+  annotations:
+    etzba.com/image-updater: enabled
 spec:
   selector:
     matchLabels:
@@ -20,7 +22,7 @@ spec:
       containers:
         - name: {{ .Values.api.name }}
           image: "{{ .Values.api.image.repository }}:{{ .Values.api.image.tag }}"
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: {{ .Values.api.pullPolicy }}
           ports:
             - containerPort: {{ .Values.api.containerPort }}
               name: http-pggo
@@ -53,6 +55,6 @@ spec:
           - name: DATABASE_PORT
             value: "5432"
           - name: DATABASE_HOST
-            value: {{ .Values.pg.name }}-svc
+            value: {{ .Values.pg.name }}
           - name: RELEASE_STAGE
             value: testing

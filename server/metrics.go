@@ -85,6 +85,6 @@ type Metrics struct {
 }
 
 func (c *collector) Collect(start time.Time, r *http.Request) {
-	c.Metrics.httpRequestCount.WithLabelValues(r.URL.Path, r.Method, r.Header.Get("Content-type")).Inc()
-	c.Metrics.handlerDuration.WithLabelValues(r.URL.Path, r.Method, r.Header.Get("Content-type")).Observe(float64(time.Since(start)))
+	c.Metrics.httpRequestCount.WithLabelValues(r.URL.Path, r.Method, "Content-Type").Inc()
+	c.Metrics.handlerDuration.WithLabelValues(r.URL.Path, r.Method, "Content-Type").Observe(float64(time.Since(start)))
 }

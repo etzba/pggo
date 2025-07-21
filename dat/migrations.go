@@ -13,7 +13,11 @@ func (c *Context) InitDB() error {
 		c.Logger.Error("could not open connection to database", err)
 		return err
 	}
-	defer db.Close()
+	defer func() {
+		if err := db.Close(); err != nil {
+			c.Logger.Error("failed to close db connection", err)
+		}
+	}()
 
 	if err = db.Ping(); err != nil {
 		c.Logger.Error("could not ping database", err)

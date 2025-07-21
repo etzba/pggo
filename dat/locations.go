@@ -40,9 +40,13 @@ func (c *Context) InsertLocationIntoDatabase(loc Location) error {
 
 	defer func() {
 		if err != nil {
-			tx.Rollback(context.TODO())
+			if err := tx.Rollback(context.TODO()); err != nil {
+				c.Logger.Error("Failed to rollback transaction", err)
+			}
 		} else {
-			tx.Commit(context.TODO())
+			if err := tx.Commit(context.TODO()); err != nil {
+				c.Logger.Error("Failed to commit transaction", err)
+			}
 		}
 	}()
 
@@ -65,9 +69,13 @@ func (c *Context) GetLocationDetailsByID(locationId int) (*Location, error) {
 
 	defer func() {
 		if err != nil {
-			tx.Rollback(context.TODO())
+			if err := tx.Rollback(context.TODO()); err != nil {
+				c.Logger.Error("Failed to rollback transaction", err)
+			}
 		} else {
-			tx.Commit(context.TODO())
+			if err := tx.Commit(context.TODO()); err != nil {
+				c.Logger.Error("Failed to commit transaction", err)
+			}
 		}
 	}()
 
@@ -91,9 +99,13 @@ func (c *Context) GetAllLocationDetails() ([]Location, error) {
 
 	defer func() {
 		if err != nil {
-			tx.Rollback(context.TODO())
+			if err := tx.Rollback(context.TODO()); err != nil {
+				c.Logger.Error("Failed to rollback transaction", err)
+			}
 		} else {
-			tx.Commit(context.TODO())
+			if err := tx.Commit(context.TODO()); err != nil {
+				c.Logger.Error("Failed to commit transaction", err)
+			}
 		}
 	}()
 
@@ -131,7 +143,7 @@ func (c *Context) UpdateLocationDetails(id int, loc Location) error {
 
 	query := "UPDATE locations SET"
 	count := 1
-	for k, _ := range locMap {
+	for k := range locMap {
 		query += fmt.Sprintf(" %s = $%d,", k, count)
 		count++
 	}
@@ -145,9 +157,13 @@ func (c *Context) UpdateLocationDetails(id int, loc Location) error {
 
 	defer func() {
 		if err != nil {
-			tx.Rollback(context.TODO())
+			if err := tx.Rollback(context.TODO()); err != nil {
+				c.Logger.Error("Failed to rollback transaction", err)
+			}
 		} else {
-			tx.Commit(context.TODO())
+			if err := tx.Commit(context.TODO()); err != nil {
+				c.Logger.Error("Failed to commit transaction", err)
+			}
 		}
 	}()
 
@@ -169,9 +185,13 @@ func (c *Context) DeleteLocationFromDatabase(locationId int) error {
 
 	defer func() {
 		if err != nil {
-			tx.Rollback(context.TODO())
+			if err := tx.Rollback(context.TODO()); err != nil {
+				c.Logger.Error("Failed to rollback transaction", err)
+			}
 		} else {
-			tx.Commit(context.TODO())
+			if err := tx.Commit(context.TODO()); err != nil {
+				c.Logger.Error("Failed to commit transaction", err)
+			}
 		}
 	}()
 

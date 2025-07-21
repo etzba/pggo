@@ -1,0 +1,21 @@
+name: cli-workflow-cicle
+# example from https://github.com/cypress-io/github-action/blob/master/.github/workflows
+on:
+  push:
+    branches:
+      - 'master'
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  cli-cicle:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout 🛎
+        uses: actions/checkout@v4
+
+      - name: Run unit tests
+        run: go test -v ./...
+
+      - name: Run makefile
+        run: make

@@ -25,7 +25,10 @@ func (s *Server) getLocations() func(w http.ResponseWriter, r *http.Request) {
 		}
 
 		for _, l := range locations {
-			fmt.Fprintf(w, "Location: %+v\n", l)
+			_, err := fmt.Fprintf(w, "Location: %+v\n", l)
+			if err != nil {
+				s.Logger.Error(fmt.Sprintf("Failed to print location %s", l.Name), err)
+			}
 		}
 		s.Respoder.SendOK(w, locations)
 	}
@@ -51,7 +54,10 @@ func (s *Server) getLocationById() func(w http.ResponseWriter, r *http.Request) 
 			return
 		}
 
-		fmt.Fprintf(w, "Location: %+v\n", location)
+		_, err = fmt.Fprintf(w, "Location: %+v\n", location)
+		if err != nil {
+			s.Logger.Error(fmt.Sprintf("Failed to print location %s", location.Name), err)
+		}
 		s.Respoder.SendOK(w, location)
 	}
 }
@@ -81,7 +87,10 @@ func (s *Server) addLocation() func(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		fmt.Fprintf(w, "Location added: %+v\n", location)
+		_, err := fmt.Fprintf(w, "Location added: %+v\n", location)
+		if err != nil {
+			s.Logger.Error(fmt.Sprintf("Failed to print location %s", location.Name), err)
+		}
 		s.Respoder.SendOK(w, location)
 	}
 }
@@ -119,7 +128,10 @@ func (s *Server) updateLocation() func(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		fmt.Fprintf(w, "Location added: %+v\n", location)
+		_, err = fmt.Fprintf(w, "Location updated: %+v\n", location)
+		if err != nil {
+			s.Logger.Error(fmt.Sprintf("Failed to print location %s", location.Name), err)
+		}
 		s.Respoder.SendOK(w, location)
 	}
 }
@@ -143,7 +155,10 @@ func (s *Server) deleteLocationById() func(w http.ResponseWriter, r *http.Reques
 			return
 		}
 
-		fmt.Fprintf(w, "Location id deleted: %+v\n", id)
+		_, err = fmt.Fprintf(w, "Location id deleted: %+v\n", id)
+		if err != nil {
+			s.Logger.Error(fmt.Sprintf("Failed to print location %d", id), err)
+		}
 		s.Respoder.SendOK(w, id)
 	}
 }
