@@ -6,11 +6,11 @@ import (
 )
 
 // Postgres connection variables
-var PostgresUser = GetEnvVar("etzba", "ETZBA_POSTGRES_USER")
-var PostgresPass = GetEnvVar("Pass1234", "ETZBA_POSTGRES_PASSWORD")
-var PostgresDB = GetEnvVar("etzba", "ETZBA_POSTGRES_DB")
-var PostgresHost = GetEnvVar("localhost", "ETZBA_POSTGRES_HOST")
-var PostgresPort = GetEnvInt(5432, "ETZBA_POSTGRES_PORT")
+var PostgresUser = GetEnvVar("etzba", "POSTGRES_USER")
+var PostgresPass = GetEnvVar("Pass1234", "POSTGRES_PASSWORD")
+var PostgresDB = GetEnvVar("etzba", "POSTGRES_DB")
+var PostgresHost = GetEnvVar("localhost", "POSTGRES_HOST")
+var PostgresPort = GetEnvInt(5432, "POSTGRES_PORT")
 
 func GetEnvVar(defaultValue, key string) string {
 	value := os.Getenv(key)

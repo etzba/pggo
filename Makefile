@@ -1,5 +1,6 @@
+NAME ?= pggo
 TAG ?= latest
-REPO ?= etzba/pggo
+REPO ?= etzba/${NAME}
 
 all: test up exec down
 
@@ -10,7 +11,7 @@ test:
 # TODO: set test from golang client
 test-e2e:
 	echo e2e
-	
+
 run:
 	go run main.go
 
@@ -57,5 +58,12 @@ docker-build:
 docker-push: ## Push docker image with the manager.
 	docker push ${REPO}:${TAG}
 
-helm:
-	helm install pggo chart/ -n pggo --create-namespace
+# install or upgrade helm in kubernetes
+install:
+	helm install ${NAME} chart/ -n ${NAME} --create-namespace
+
+upgrade:
+	helm upgrade --install ${NAME} chart/ -n ${NAME}
+
+remove:
+	kubectl delete ns ${NAME}

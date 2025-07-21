@@ -2,33 +2,7 @@
 version: "2"
 
 run:
-  concurrency: 4
-  timeout: 5m
-  go: '1.24'
-
-formatters:
-  enable:
-    - gci
-    - gofmt
-    - goimports
-
-output:
-  formats:
-    json:
-      path: stdout
-      colors: true
-    text:
-      path: stderr
-      print-linter-name: true
-      print-issued-lines: true
-    checkstyle:
-      path: report.xml
-  sort-order:
-    - linter
-    - severity
-    - file
-  show-stats: true
-
+  allow-parallel-runners: true
 linters:
   disable-all: true
   enable:
@@ -66,10 +40,32 @@ linters:
     - unused
     - wastedassign
     - whitespace
-
-severity:
-  default: error
-  rules:
-    - linters:
-        - dupl
-      severity: info
+  settings:
+    revive:
+      rules:
+        - name: comment-spacings
+        - name: import-shadowing
+  exclusions:
+    generated: lax
+    rules:
+      - linters:
+          - lll
+        path: api/*
+      - linters:
+          - dupl
+          - lll
+        path: internal/*
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
+formatters:
+  enable:
+    - gofmt
+    - goimports
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$

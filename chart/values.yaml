@@ -3,8 +3,8 @@ api:
   name: pggo
   image:
     repository: etzba/pggo
-    pullPolicy: Always
     tag: "latest"
+  pullPolicy: Always
   containerPort: 8080
   resources:
     limits:
