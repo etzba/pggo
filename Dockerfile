@@ -1,19 +1,23 @@
 # build
-FROM golang:1.22-bullseye AS be_builder
+FROM golang:1.22-bullseye AS builder
+LABEL authors="support@etzba.com, Nadav Ben Mazia"
 
 COPY . /build
-
 WORKDIR /build
 
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -o pggo main.go
+# Go mod download and verify dependencies
+RUN go mod download
+RUN go mod verify
+# Build the app
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build \
+    -ldflags='-w -s -extldflags "-static"' \
+    -a -installsuffix cgo \
+    -o gopu main.go
 
-# alpine
-FROM alpine:3.20
-
-RUN apk add ca-certificates
-
-COPY --from=be_builder /build/pggo /pggo
-
+# New distroless image with no root
+FROM gcr.io/distroless/static:nonroot
+# Copy the app from builder
+COPY --from=builder /build/gopu /gopu
 WORKDIR /
-
 CMD ["./pggo"]
+
