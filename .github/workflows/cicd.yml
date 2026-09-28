@@ -123,20 +123,20 @@ jobs:
           echo '${{ secrets.COSIGN_PUBLIC_KEY }}' > cosign.pub
           cosign verify --key cosign.pub ghcr.io/${{ github.repository }}:${{ github.sha }}
       - name: Checkout repository
-        if: github.event_name == 'pull_request' || github.event.action == 'closed' || github.event.pull_request.merged == true
+        if: github.event.pull_request.merged == true
         uses: actions/checkout@v4
       - name: Set up cosign
-        if: github.event_name == 'pull_request' || github.event.action == 'closed' || github.event.pull_request.merged == true
+        if: github.event.pull_request.merged == true
         uses: sigstore/cosign-installer@main
       - name: Log in to docker hub
-        if: github.event_name == 'pull_request' || github.event.action == 'closed' || github.event.pull_request.merged == true
+        if: github.event.pull_request.merged == true
         uses: docker/login-action@v3
         with:
           registry: docker.io
           username: etzba
           password: ${{ secrets.dockerHubToken }}
       - name: Publish container image to docker hub
-        if: github.event_name == 'pull_request' || github.event.action == 'closed' || github.event.pull_request.merged == true
+        if: github.event.pull_request.merged == true
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -152,7 +152,7 @@ jobs:
             org.opencontainers.image.revision=${{ github.sha }}
             org.opencontainers.image.version=${{ env.VERSION }}
       - name: sign container image
-        if: github.event_name == 'pull_request' || github.event.action == 'closed' || github.event.pull_request.merged == true
+        if: github.event.pull_request.merged == true
         run: |
             echo '${{ secrets.COSIGN_KEY }}' > cosign.key
             cosign sign --key cosign.key docker.io/${{ github.repository }}:${{ github.sha }}
@@ -162,7 +162,7 @@ jobs:
             ${{secrets.COSIGN_KEY}}
           COSIGN_PASSWORD: ""
       - name: Check images
-        if: github.event_name == 'pull_request' || github.event.action == 'closed' || github.event.pull_request.merged == true
+        if: github.event.pull_request.merged == true
         run: |
           docker buildx imagetools inspect docker.io/${{ github.repository }}:${{ github.sha }}
           docker pull docker.io/${{ github.repository }}:${{ github.sha }}
