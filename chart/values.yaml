@@ -2,9 +2,10 @@
 api: 
   name: pggo
   image:
-    repository: etzba/pggo
+    repository: ghcr.io/etzba/pggo
     tag: "latest"
   pullPolicy: Always
+  pullSecret: ghcr-secret
   containerPort: 8080
   resources:
     limits:

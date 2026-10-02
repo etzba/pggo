@@ -58,3 +58,7 @@ spec:
             value: {{ .Values.pg.name }}
           - name: RELEASE_STAGE
             value: testing
+      {{- if .Values.api.pullSecret }}
+      imagePullSecrets:
+      - name: {{ .Values.api.pullSecret }}
+      {{- end }}
