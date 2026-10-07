@@ -1,5 +1,5 @@
 # build
-FROM golang:1.24-bookworm AS builder
+FROM golang:1.26-bookworm AS builder
 LABEL authors="support@etzba.com, Nadav Ben Mazia"
 COPY . /build
 WORKDIR /build
