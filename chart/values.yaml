@@ -5,6 +5,9 @@ api:
     repository: etzba/pggo
     tag: "latest"
   pullPolicy: Always
+  pullSecret: docker-secret
+  dockerConfigSecret: "default"
+  distributedPullSecret: true
   containerPort: 8080
   resources:
     limits:
