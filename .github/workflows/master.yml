@@ -101,7 +101,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/${{ github.repository }}:${{ github.sha }} , ghcr.io/${{ github.repository }}:${{ github.ref_name }} ,  ghcr.io/${{ github.repository }}:latest
+          tags: ghcr.io/${{ github.repository }}:${{ github.sha }} , ghcr.io/${{ github.repository }}:${{ github.head_ref }} ,  ghcr.io/${{ github.repository }}:latest
           builder: ${{ steps.buildx.outputs.name }}
           file: ./Dockerfile
           platforms: linux/amd64
@@ -141,7 +141,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: docker.io/${{ github.repository }}:${{ github.sha }} , docker.io/${{ github.repository }}:${{ github.ref_name }} , docker.io/${{ github.repository }}:latest
+          tags: docker.io/${{ github.repository }}:${{ github.sha }} , docker.io/${{ github.repository }}:${{ github.head_ref }} , docker.io/${{ github.repository }}:latest
           builder: ${{ steps.buildx.outputs.name }}
           file: ./Dockerfile
           platforms: linux/amd64
