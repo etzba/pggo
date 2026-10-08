@@ -1,25 +1,10 @@
-name: Determine known CVEs through `govulncheck`
-on:
-  push:
-    branches:
-      - b-upgrade-go-packages
-      - master
-
+name: govulncheck 
+on: [push]
 jobs:
-  check-for-vulnerabilities:
-    name: Check for vulnerabilities using `govulncheck`
+  test:
     runs-on: ubuntu-latest
     permissions:
-      security-events: write
       contents: read
     steps:
-      - uses: golang/govulncheck-action@b625fbe08f3bccbe446d94fbf87fcc875a4f50ee # v1.0.4
-        with:
-          output-format: sarif
-          output-file: govulncheck.sarif
-
-      - name: Upload SARIF file
-        uses: github/codeql-action/upload-sarif@192325c86100d080feab897ff886c34abd4c83a3 # v3.30.2
-        with:
-          sarif_file: govulncheck.sarif
-          category: govulncheck
+    - uses: actions/checkout@v3
+    - uses: elgohr/go-vulncheck-action@v1
