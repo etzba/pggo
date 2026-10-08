@@ -8,7 +8,7 @@ on:
 jobs:
   test:
     name: Run unit tests on ubuntu
-    runs-on: ubuntu-${{ steps.vars.outputs.tag }}
+    runs-on: ubuntu-latest
     steps:
       - name: Clone the code
         uses: actions/checkout@v4
@@ -25,7 +25,7 @@ jobs:
 
   go-build:
     name: Build app on ubuntu
-    runs-on: ubuntu-${{ steps.vars.outputs.tag }}
+    runs-on: ubuntu-latest
     steps:
       - name: Clone the code
         uses: actions/checkout@v4
@@ -45,7 +45,7 @@ jobs:
 
   lint:
     name: Run golangci linter on ubuntu
-    runs-on: ubuntu-${{ steps.vars.outputs.tag }}
+    runs-on: ubuntu-latest
     steps:
       - name: Clone the code
         uses: actions/checkout@v4
@@ -63,7 +63,7 @@ jobs:
   build-container:
     name: Build and push container image
     needs: [test, go-build] 
-    runs-on: ubuntu-${{ steps.vars.outputs.tag }}
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
