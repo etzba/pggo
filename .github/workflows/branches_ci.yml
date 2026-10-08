@@ -96,6 +96,16 @@ jobs:
         shell: bash
         run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
         id: extract_branch
+      - name: Extract branch name
+        shell: bash
+        run: echo "tag=$(${GITHUB_REF} | awk -F "/" '{print $3}')" >> $GITHUB_OUTPUT
+        id: extract_tag
+      - name: Check output
+        env:
+          RELEASE_VERSION: ${{ steps.extract_tag.outputs.tag }}
+        run: |
+          echo $RELEASE_VERSION
+          echo ${{ steps.extract_tag.outputs.tag }}
       - name: Publish container image to ghcr.io
         uses: docker/build-push-action@v5
         with:
