@@ -26,7 +26,8 @@ jobs:
           echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
       - name: Run govulncheck (symbol-level analysis)
         run: |
-          govulncheck -format=sarif -output=govulncheck.sarif ./… || true
+          govulncheck -format=sarif ./… > govulncheck.sarif || true
+          cat govulncheck.sarif
       - name: Upload vulnerability report to GitHub Security
         uses: github/codeql-action/upload-sarif@v3
         with:
