@@ -1,4 +1,4 @@
-name: CICD
+name: Branches CI pipeline
 
 on:
   push:
