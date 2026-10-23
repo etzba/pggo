@@ -1,35 +1,35 @@
 package dat
 
 import (
-	"database/sql"
+	"fmt"
 
+	"github.com/jackc/pgx/v5"
 	_ "github.com/lib/pq"
 )
 
 // InitDB perform initial db migrations
 func (c *Context) InitDB() error {
-	db, err := sql.Open("postgres", getConnectionString())
+	tx, err := c.ConnectionPool.BeginTx(c.ctx, pgx.TxOptions{IsoLevel: pgx.ReadCommitted})
 	if err != nil {
-		c.Logger.Error("could not open connection to database", err)
-		return err
+		return fmt.Errorf("begin tx: %w", err)
 	}
+	// Safe to call after Commit: it returns pgx.ErrTxClosed, which we ignore.
 	defer func() {
-		if err := db.Close(); err != nil {
-			c.Logger.Error("failed to close db connection", err)
+		if err = tx.Rollback(c.ctx); err != nil && err != pgx.ErrTxClosed {
+			c.Logger.Error("failed to rollback transaction", err)
 		}
 	}()
 
-	if err = db.Ping(); err != nil {
-		c.Logger.Error("could not ping database", err)
-		return err
-	}
-
-	_, err = db.Exec(dbMigrations)
+	tag, err := tx.Exec(c.ctx, dbMigrations)
 	if err != nil {
-		c.Logger.Error("could not run db migrations", err)
 		return err
 	}
 
+	if err := tx.Commit(c.ctx); err != nil {
+		return err
+	}
+
+	c.Logger.Info(fmt.Sprintf("Database migration completed. Command tag: %s", tag.String()))
 	return nil
 }
 

@@ -34,7 +34,6 @@ up:
 	docker-compose down
 	sleep 3
 	docker-compose up -d pg
-	sleep 8
 	docker-compose up -d pggo 
 
 down:
@@ -57,6 +56,10 @@ docker-build:
 .PHONY: docker-push
 docker-push: ## Push docker image with the manager.
 	docker push ${REPO}:${TAG}
+
+.PHONY: docker-run
+docker-run:
+	docker run -t -e POSTGRES_HOST=localhost -e POSTGRES_PASSWORD=Pass1234 -e POSTGRES_PORT=5432 -e POSTGRES_USER=etzba -e POSTGRES_DB=etzba --rm ${REPO}:${TAG}
 
 # install or upgrade helm in kubernetes
 install:

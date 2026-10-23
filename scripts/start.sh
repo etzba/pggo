@@ -1,13 +1,12 @@
-export ETZBA_DATABASE_USER=etzba
-export ETZBA_DATABASE_PASSWORD=Pass1234
-export ETZBA_DATABASE_DB=etzba
-export ETZBA_DATABASE_PORT=5432
-export ETZBA_DATABASE_HOST=localhost
-export ETZBA_DATABASE_SSL=disable
+#!/bin/sh
+export DATABASE_USER=etzba
+export DATABASE_PASSWORD=Pass1234
+export DATABASE_DB=etzba
+export DATABASE_PORT=5432
+export DATABASE_HOST=localhost
+export DATABASE_SSL=disable
 
 docker-compose down
 docker-compose up -d pg
-
-sleep 6
-
+sleep 1
 go run main.go
