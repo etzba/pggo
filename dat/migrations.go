@@ -12,7 +12,8 @@ import (
 func (c *Context) InitDB() error {
 	tx, err := c.ConnectionPool.BeginTx(c.ctx, pgx.TxOptions{IsoLevel: pgx.ReadCommitted})
 	if err != nil {
-		return fmt.Errorf("begin tx: %w", err)
+		err = fmt.Errorf("InitDB: failed to begin transacation: %v", err)
+		return err
 	}
 	// Safe to call after Commit: it returns pgx.ErrTxClosed, which we ignore.
 	defer func() {
@@ -23,10 +24,12 @@ func (c *Context) InitDB() error {
 
 	tag, err := tx.Exec(c.ctx, dbMigrations)
 	if err != nil {
+		err = fmt.Errorf("InitDB: failed to execute transacation: %v", err)
 		return err
 	}
 
 	if err := tx.Commit(c.ctx); err != nil {
+		err = fmt.Errorf("InitDB: failed to commit transacation: %v", err)
 		return err
 	}
 
