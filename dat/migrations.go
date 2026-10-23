@@ -1,6 +1,7 @@
 package dat
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/jackc/pgx/v5"
@@ -15,7 +16,7 @@ func (c *Context) InitDB() error {
 	}
 	// Safe to call after Commit: it returns pgx.ErrTxClosed, which we ignore.
 	defer func() {
-		if err = tx.Rollback(c.ctx); err != nil && err != pgx.ErrTxClosed {
+		if err = tx.Rollback(c.ctx); err != nil && !errors.Is(err, pgx.ErrTxClosed) {
 			c.Logger.Error("failed to rollback transaction", err)
 		}
 	}()

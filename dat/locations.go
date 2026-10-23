@@ -195,6 +195,11 @@ func (c *Context) DeleteLocationFromDatabase(locationId int) error {
 		}
 	}()
 
-	_, err = tx.Query(context.Background(), "DELETE FROM locations WHERE id = $1", locationId)
-	return err
+	rows, err := tx.Query(context.Background(), "DELETE FROM locations WHERE id = $1", locationId)
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+
+	return nil
 }
