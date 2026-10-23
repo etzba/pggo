@@ -11,6 +11,7 @@ var PostgresPass = GetEnvVar("Pass1234", "POSTGRES_PASSWORD")
 var PostgresDB = GetEnvVar("etzba", "POSTGRES_DB")
 var PostgresHost = GetEnvVar("localhost", "POSTGRES_HOST")
 var PostgresPort = GetEnvInt(5432, "POSTGRES_PORT")
+var PostgresSSL = GetEnvVar("disable", "POSTGRES_SSL")
 
 func GetEnvVar(defaultValue, key string) string {
 	value := os.Getenv(key)
