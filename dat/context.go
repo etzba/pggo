@@ -27,7 +27,7 @@ func GetDatabaseContext() (*Context, error) {
 	ctx := context.Background()
 	cfg, err := pgxpool.ParseConfig(getConnectionString())
 	if err != nil {
-		err = fmt.Errorf("failed to parse config: %v", err)
+		logger.Error("failed to parse config: %v", err)
 		return nil, err
 	}
 	cfg.MaxConns = 5
@@ -35,7 +35,7 @@ func GetDatabaseContext() (*Context, error) {
 
 	pool, err := pgxpool.NewWithConfig(ctx, cfg)
 	if err != nil {
-		err = fmt.Errorf("failed to create pgx pool: %v", err)
+		logger.Error("failed to create pgx pool: %v", err)
 		return nil, err
 	}
 
@@ -45,7 +45,7 @@ func GetDatabaseContext() (*Context, error) {
 		if err := pool.Ping(pingCtx); err != nil {
 			time.Sleep(3 * time.Second)
 		} else if i == pingRetries-1 {
-			err = fmt.Errorf("failed to ping database after %d retries: %v", pingRetries, err)
+			logger.Error(fmt.Sprintf("failed to ping database after %d retries", pingRetries), err)
 			return nil, err
 		} else {
 			break
